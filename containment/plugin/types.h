@@ -58,7 +58,8 @@ public:
     {
         PlasmaThemeColors = 0,
         ReverseThemeColors,
-        SmartThemeColors
+        SmartThemeColors,
+        CustomThemeColors
     };
     Q_ENUM(ThemeColorsGroup);
 
