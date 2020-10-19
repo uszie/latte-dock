@@ -383,7 +383,7 @@ void Theme::updateCustomSchemeValues()
 
                 if (customGroup.keyList().contains("BackgroundNormal")
                         && customGroup.keyList().contains("ForegroundNormal")) {
-                    //! reverse usual text/background values
+                    //! set usual text/background values
                     KConfigGroup originalGroup(originalPtr, groupName);
 
                     customGroup.writeEntry("BackgroundNormal", m_customBackground);
@@ -402,7 +402,7 @@ void Theme::updateCustomSchemeValues()
                 && customWMGroup.keyList().contains("activeForeground")
                 && customWMGroup.keyList().contains("inactiveBackground")
                 && customWMGroup.keyList().contains("inactiveForeground")) {
-            //! reverse usual wm titlebar values
+            //! set usual wm titlebar values
             KConfigGroup originalGroup(originalPtr, "WM");
             customWMGroup.writeEntry("activeBackground", m_customBackground);
             customWMGroup.writeEntry("activeForeground", m_customForeground);
