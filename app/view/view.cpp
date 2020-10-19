@@ -76,7 +76,7 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassWM)
       m_contextMenu(new ViewPart::ContextMenu(this)),
       m_effects(new ViewPart::Effects(this)),
       m_interface(new ViewPart::ContainmentInterface(this))
-{      
+{
     //! needs to be created after Effects because it catches some of its signals
     //! and avoid a crash from View::winId() at the same time
     m_positioner = new ViewPart::Positioner(this);
@@ -334,7 +334,7 @@ void View::init(Plasma::Containment *plasma_containment)
     if (containmentGraphicItem) {
         containmentGraphicItem->setProperty("_latte_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
         containmentGraphicItem->setProperty("_latte_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
-        containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
+        containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(new PlasmaExtended::Theme(KSharedConfig::openConfig(), this)));
         containmentGraphicItem->setProperty("_latte_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
         containmentGraphicItem->setProperty("_latte_view_object", QVariant::fromValue(this));
 
@@ -514,7 +514,7 @@ void View::showConfigurationInterface(Plasma::Applet *applet)
     if (c && containment() && c->isContainment() && c->id() == containment()->id()) {
         m_primaryConfigView = m_corona->viewSettingsFactory()->primaryConfigView(this);
         applyActivitiesToWindows();
-    } else {       
+    } else {
         m_appletConfigView = new PlasmaQuick::ConfigView(applet);
         m_appletConfigView.data()->init();
         m_appletConfigView->show();
@@ -1329,7 +1329,7 @@ void View::setInterfacesGraphicObj(Latte::Interfaces *ifaces)
 }
 
 bool View::event(QEvent *e)
-{   
+{
     if (!m_inDelete) {
         emit eventTriggered(e);
 

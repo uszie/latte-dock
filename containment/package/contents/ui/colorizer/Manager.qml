@@ -109,6 +109,10 @@ Loader{
                 return themeExtended.isLightTheme ? themeExtended.darkTheme : themeExtended.lightTheme;
             }
 
+            if (root.themeColors === LatteContainment.Types.CustomThemeColors) {
+                return themeExtended.customTheme;
+            }
+
             if (root.themeColors === LatteContainment.Types.SmartThemeColors) {
                 //! Smart Colors Case
                 if (!root.forcePanelForBusyBackground) {

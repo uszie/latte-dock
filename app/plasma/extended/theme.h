@@ -77,6 +77,9 @@ class Theme: public QObject
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *defaultTheme READ defaultTheme NOTIFY themeChanged)
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *lightTheme READ lightTheme NOTIFY themeChanged)
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *darkTheme READ darkTheme NOTIFY themeChanged)
+    Q_PROPERTY(Latte::WindowSystem::SchemeColors *customTheme READ customTheme NOTIFY themeChanged)
+    Q_PROPERTY(QColor customBackground READ customBackground WRITE setCustomBackground NOTIFY themeChanged)
+    Q_PROPERTY(QColor customForeground READ customForeground WRITE setCustomForeground NOTIFY themeChanged)
 
 public:
     Theme(KSharedConfig::Ptr config, QObject *parent);
@@ -85,7 +88,6 @@ public:
     bool hasShadow() const;
     bool isLightTheme() const;
     bool isDarkTheme() const;
-
     int outlineWidth() const;
     void setOutlineWidth(int width);
 
@@ -97,7 +99,11 @@ public:
     WindowSystem::SchemeColors *defaultTheme() const;
     WindowSystem::SchemeColors *lightTheme() const;
     WindowSystem::SchemeColors *darkTheme() const;
-
+    WindowSystem::SchemeColors *customTheme() const;
+    QColor customBackground() const;
+    void setCustomBackground(QColor &background);
+    QColor customForeground() const;
+    void setCustomForeground(QColor &foreground);
     const CornerRegions &cornersMask(const int &radius);
 
     void load();
@@ -125,10 +131,13 @@ private:
     void updateDefaultSchemeValues();
     void updateReversedScheme();
     void updateReversedSchemeValues();
-
+    void updateCustomScheme();
+    void updateCustomSchemeValues();
     void qmlRegisterTypes();
 
 private:
+    QColor m_customBackground{Qt::black};
+    QColor m_customForeground{Qt::white};
     bool m_hasShadow{false};
     bool m_isLightTheme{false};
     bool m_compositing{true};
@@ -140,6 +149,7 @@ private:
     QString m_defaultSchemePath;
     QString m_originalSchemePath;
     QString m_reversedSchemePath;
+    QString m_customSchemePath;
 
     QHash<int, CornerRegions> m_cornerRegions;
 
@@ -157,6 +167,7 @@ private:
     Latte::Corona *m_corona{nullptr};
     WindowSystem::SchemeColors *m_defaultScheme{nullptr};
     WindowSystem::SchemeColors *m_reversedScheme{nullptr};
+    WindowSystem::SchemeColors *m_customScheme{nullptr};
 };
 
 }
