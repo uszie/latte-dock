@@ -460,6 +460,7 @@ private:
     QList<QWindow *> m_transientWindows;
 
     KWayland::Client::PlasmaShellSurface *m_shellSurface{nullptr};
+    Latte::PlasmaExtended::Theme *m_themeExtended;
 };
 
 }

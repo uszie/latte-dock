@@ -7,8 +7,8 @@
   <group name="General">
     <entry name="alignment" type="Int">
       <default>0</default>
-      <label>introduced in v0.10, "0" stands for "Center"</label>      
-    </entry>      
+      <label>introduced in v0.10, "0" stands for "Center"</label>
+    </entry>
     <entry name="appletOrder" type="String">
       <label>encoded order of items</label>
     </entry>
@@ -39,8 +39,8 @@
     <entry name="lastSidebarVisibilityMode" type="Int">
       <default>8</default>
       <label>last dodge visibility mode used, 8 stands for "On Demand Sidebar"</label>
-    </entry>   
-    
+    </entry>
+
     <entry name="appletShadowsEnabled" type="Bool">
       <default>true</default>
       <label>enable latte drawn applet shadows</label>
@@ -141,9 +141,16 @@
             <choice name="SmartThemeColors"/>
             <choice name="DarkThemeColors"/>
             <choice name="LightThemeColors"/>
+            <choice name="CustomThemeColors"/>
       </choices>
       <default>0</default>
       <label>which theme color palette is going to be used</label>
+    </entry>
+    <entry name="customBackgroundColor" type="String">
+          <default>#000000</default>
+    </entry>
+    <entry name="customForegroundColor" type="String">
+          <default>#FFFFFF</default>
     </entry>
     <entry name="windowColors" type="Enum">
       <choices>
@@ -197,7 +204,7 @@
     <entry name="closeActiveWindowEnabled" type="Bool">
       <default>false</default>
       <label>Close active window from empty areas</label>
-    </entry>    
+    </entry>
     <entry name="activeWindowFilter" type="Enum">
       <choices>
             <choice name="InCurrentScreen"/>
@@ -241,7 +248,7 @@
       </choices>
       <default>2</default>
     </entry>
-    
+
 <!-- Upgrade Flags -->
 <!-- _____________ -->
     <entry name="alignmentUpgraded" type="Bool">
@@ -256,7 +263,7 @@
       <default>false</default>
       <label>flag to check if Tasks properties were moved to Tasks plasmoid configuration. Since Latte v0.10 we can have multiple Tasks applets in the same dock</label>
     </entry>
-    
+
 <!-- Deprecated Section Containment -->
 <!-- ______________________________ -->
     <entry name="panelPosition" type="Enum">
