@@ -530,6 +530,10 @@ Item {
     }
 
     Component.onCompleted: {
+        themeExtended.customBackground = Qt.binding(function() { return plasmoid.configuration.customBackgroundColor });
+        themeExtended.customForeground = Qt.binding(function() { return plasmoid.configuration.customForegroundColor });
+        themeExtended.useCustomColors = Qt.binding(function() { return plasmoid.configuration.themeColors === LatteContainment.Types.CustomThemeColors });
+
         upgrader_v010_alignment();
 
         fastLayoutManager.restore();

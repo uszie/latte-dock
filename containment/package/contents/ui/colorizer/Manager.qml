@@ -96,6 +96,8 @@ Loader{
                 return themeExtended.lightTheme;
             } else if (root.themeColors === LatteContainment.Types.ReverseThemeColors) {
                 return themeExtended.isLightTheme ? themeExtended.darkTheme : themeExtended.lightTheme;
+            } else if (root.themeColors === LatteContainment.Types.CustomThemeColors) {
+                return themeExtended.defaultTheme;
             } else if (root.themeColors === LatteContainment.Types.LayoutThemeColors && latteView && latteView.layout) {
                 return latteView.layout.scheme;
             }
@@ -129,7 +131,7 @@ Loader{
 
     property color applyColor: textColor
 
-    readonly property color backgroundColor:applyTheme.backgroundColor
+    readonly property color backgroundColor: applyTheme.backgroundColor
     readonly property color textColor: {
         if (latteView && latteView.layout
                 && root.inConfigureAppletsMode
