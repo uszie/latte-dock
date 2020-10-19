@@ -47,6 +47,7 @@ public:
         SmartThemeColors,
         DarkThemeColors,
         LightThemeColors,
+        CustomThemeColors,
         LayoutThemeColors
     };
     Q_ENUM(ThemeColorsGroup);
