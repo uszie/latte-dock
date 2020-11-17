@@ -110,7 +110,7 @@ Loader{
             }
 
             if (root.themeColors === LatteContainment.Types.CustomThemeColors) {
-                return themeExtended.customTheme;
+                return themeExtended.defaultTheme;
             }
 
             if (root.themeColors === LatteContainment.Types.SmartThemeColors) {
@@ -142,7 +142,7 @@ Loader{
 
     property color applyColor: textColor
 
-    readonly property color backgroundColor:applyTheme.backgroundColor
+    readonly property color backgroundColor: applyTheme.backgroundColor
     readonly property color textColor: {
         if (latteView && latteView.layout
                 && root.inConfigureAppletsMode

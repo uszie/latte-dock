@@ -441,8 +441,8 @@ private:
     QList<QWindow *> m_transientWindows;
 
     QPointer<Latte::Corona> m_corona;
-
     KWayland::Client::PlasmaShellSurface *m_shellSurface{nullptr};
+    Latte::PlasmaExtended::Theme *m_themeExtended;
 };
 
 }

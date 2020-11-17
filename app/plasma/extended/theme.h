@@ -77,9 +77,9 @@ class Theme: public QObject
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *defaultTheme READ defaultTheme NOTIFY themeChanged)
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *lightTheme READ lightTheme NOTIFY themeChanged)
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *darkTheme READ darkTheme NOTIFY themeChanged)
-    Q_PROPERTY(Latte::WindowSystem::SchemeColors *customTheme READ customTheme NOTIFY themeChanged)
     Q_PROPERTY(QColor customBackground READ customBackground WRITE setCustomBackground NOTIFY themeChanged)
     Q_PROPERTY(QColor customForeground READ customForeground WRITE setCustomForeground NOTIFY themeChanged)
+    Q_PROPERTY(bool useCustomColors READ useCustomColors WRITE setUseCustomColors NOTIFY themeChanged)
 
 public:
     Theme(KSharedConfig::Ptr config, QObject *parent);
@@ -99,11 +99,12 @@ public:
     WindowSystem::SchemeColors *defaultTheme() const;
     WindowSystem::SchemeColors *lightTheme() const;
     WindowSystem::SchemeColors *darkTheme() const;
-    WindowSystem::SchemeColors *customTheme() const;
     QColor customBackground() const;
     void setCustomBackground(QColor &background);
     QColor customForeground() const;
     void setCustomForeground(QColor &foreground);
+    bool useCustomColors() const;
+    void setUseCustomColors(bool enable);
     const CornerRegions &cornersMask(const int &radius);
 
     void load();
@@ -127,6 +128,8 @@ private:
 
     void setOriginalSchemeFile(const QString &file);
     void updateHasShadow();
+    QString basicSchemePath() const;
+    void updateAllSchemes();
     void updateDefaultScheme();
     void updateDefaultSchemeValues();
     void updateReversedScheme();
@@ -136,8 +139,6 @@ private:
     void qmlRegisterTypes();
 
 private:
-    QColor m_customBackground{Qt::black};
-    QColor m_customForeground{Qt::white};
     bool m_hasShadow{false};
     bool m_isLightTheme{false};
     bool m_compositing{true};
@@ -150,6 +151,9 @@ private:
     QString m_originalSchemePath;
     QString m_reversedSchemePath;
     QString m_customSchemePath;
+    QColor m_customBackground{Qt::black};
+    QColor m_customForeground{Qt::white};
+    bool m_useCustomColors{false};
 
     QHash<int, CornerRegions> m_cornerRegions;
 
