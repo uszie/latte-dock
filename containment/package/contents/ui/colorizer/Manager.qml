@@ -108,6 +108,10 @@ Loader{
                 return themeExtended.isLightTheme ? themeExtended.darkTheme : themeExtended.lightTheme;
             }
 
+            if (root.themeColors === LatteContainment.Types.CustomThemeColors) {
+                return themeExtended.defaultTheme;
+            }
+
             if (root.themeColors === LatteContainment.Types.SmartThemeColors) {
                 //! Smart Colors Case
                 if (!root.forcePanelForBusyBackground) {
@@ -137,7 +141,7 @@ Loader{
 
     property color applyColor: textColor
 
-    readonly property color backgroundColor:applyTheme.backgroundColor
+    readonly property color backgroundColor: applyTheme.backgroundColor
     readonly property color textColor: {
         if (latteView && latteView.layout
                 && root.inConfigureAppletsMode

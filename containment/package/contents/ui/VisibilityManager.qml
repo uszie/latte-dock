@@ -253,7 +253,7 @@ Item{
         target: latteView && latteView.effects ? latteView.effects : null
         property: "backgroundOpacity"
         when: latteView && latteView.effects
-        value: background.currentOpacity
+        value: themeExtended.useCustomColors ? 0 : background.currentOpacity
     }
 
     Binding{

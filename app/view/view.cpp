@@ -264,6 +264,10 @@ View::~View()
     if (m_windowsTracker) {
         delete m_windowsTracker;
     }
+
+    if (m_themeExtended) {
+        delete m_themeExtended;
+    }
 }
 
 void View::init(Plasma::Containment *plasma_containment)
@@ -336,7 +340,9 @@ void View::init(Plasma::Containment *plasma_containment)
     if (containmentGraphicItem) {
         containmentGraphicItem->setProperty("_latte_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
         containmentGraphicItem->setProperty("_latte_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
-        containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
+        m_themeExtended = new PlasmaExtended::Theme(KSharedConfig::openConfig(), this);
+        m_themeExtended->load();
+        containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(m_themeExtended));
         containmentGraphicItem->setProperty("_latte_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
         containmentGraphicItem->setProperty("_latte_view_object", QVariant::fromValue(this));
 

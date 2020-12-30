@@ -502,7 +502,7 @@ PlasmaComponents.Page {
                                 } else {
                                     value = Math.min(Math.max(from, plasmoid.configuration.offset), to);
                                     plasmoid.configuration.offset = value;
-                                }                                
+                                }
 
                                 var newTotal = Math.abs(value) + plasmoid.configuration.maxLength;
 
@@ -764,10 +764,143 @@ PlasmaComponents.Page {
                     Layout.fillWidth: true
                     model: [i18nc("plasma theme colors", "Plasma"),
                         i18nc("reverse plasma theme colors", "Reverse"),
-                        i18nc("smart theme colors", "Smart")]
+                        i18nc("smart theme colors", "Smart"),
+                        i18nc("custom theme colors", "Custom")]
 
                     currentIndex: plasmoid.configuration.themeColors
                     onCurrentIndexChanged: plasmoid.configuration.themeColors = currentIndex
+                }
+
+                PlasmaComponents.Label {
+                    text: i18n("Background color")
+                    enabled: backgroundColorBtn.enabled;
+                }
+
+                PlasmaComponents.Button {
+                    id: backgroundColorBtn
+                    Layout.fillWidth: true
+                    height: parent.height
+                    text: " "
+                    tooltip: i18n("Use to set background color")
+                    enabled: plasmoid.configuration.themeColors === LatteContainment.Types.CustomThemeColors
+
+                    Rectangle{
+                        anchors.fill: parent
+                        anchors.margins: 1.5*units.smallSpacing
+                        color: plasmoid.configuration.customBackgroundColor;
+                        opacity: plasmoid.configuration.themeColors === LatteContainment.Types.CustomThemeColors ? 1 : 0.6
+
+                        Rectangle{
+                            anchors.fill: parent
+                            color: "transparent"
+                            border.width: 1
+                            border.color: theme.textColor
+                            opacity: parent.opacity - 0.4
+                        }
+
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                viewConfig.setSticker(true);
+                                backgroundColorDialogLoader.showDialog = true;
+                            }
+                        }
+                    }
+
+                    Loader{
+                        id:backgroundColorDialogLoader
+                        property bool showDialog: false
+                        active: showDialog
+
+                        sourceComponent: ColorDialog {
+                            title: i18n("Please choose background color")
+                            showAlphaChannel: false
+
+                            onAccepted: {
+                                var strC = String(color);
+                                if (strC.indexOf("#") === 0) {
+                                    plasmoid.configuration.customBackgroundColor = strC;
+                                }
+
+                                backgroundColorDialogLoader.showDialog = false;
+                                viewConfig.setSticker(false);
+                            }
+                            onRejected: {
+                                backgroundColorDialogLoader.showDialog = false;
+                                viewConfig.setSticker(false);
+                            }
+                            Component.onCompleted: {
+                                color = String(plasmoid.configuration.customBackgroundColor);
+                                visible = true;
+                            }
+                        }
+                    }
+                }
+
+                PlasmaComponents.Label {
+                    text: i18n("Foreground color")
+                    enabled: foregroundColorBtn.enabled;
+                }
+
+                PlasmaComponents.Button {
+                    id: foregroundColorBtn
+                    Layout.fillWidth: true
+                    height: parent.height
+                    text: " "
+                    tooltip: i18n("Use to set foreground color")
+                    enabled: plasmoid.configuration.themeColors === LatteContainment.Types.CustomThemeColors
+
+                    Rectangle{
+                        anchors.fill: parent
+                        anchors.margins: 1.5*units.smallSpacing
+                        color: plasmoid.configuration.customForegroundColor;
+                        opacity: plasmoid.configuration.themeColors === LatteContainment.Types.CustomThemeColors ? 1 : 0.6
+
+                        Rectangle{
+                            anchors.fill: parent
+                            color: "transparent"
+                            border.width: 1
+                            border.color: theme.textColor
+                            opacity: parent.opacity - 0.4
+                        }
+
+                        MouseArea{
+                            anchors.fill: parent
+                            onClicked: {
+                                viewConfig.setSticker(true);
+                                foregroundColorDialogLoader.showDialog = true;
+                            }
+                        }
+                    }
+
+                    Loader{
+                        id:foregroundColorDialogLoader
+                        property bool showDialog: false
+                        active: showDialog
+
+                        sourceComponent: ColorDialog {
+                            title: i18n("Please choose foreground color")
+                            showAlphaChannel: false
+
+                            onAccepted: {
+                                var strC = String(color);
+                                if (strC.indexOf("#") === 0) {
+                                    plasmoid.configuration.customForegroundColor = strC;
+                                }
+
+                                foregroundColorDialogLoader.showDialog = false;
+                                viewConfig.setSticker(false);
+                            }
+                            onRejected: {
+                                foregroundColorDialogLoader.showDialog = false;
+                                viewConfig.setSticker(false);
+                            }
+                            Component.onCompleted: {
+                                color = String(plasmoid.configuration.customForegroundColor);
+                                visible = true;
+                            }
+                        }
+                    }
                 }
 
                 PlasmaComponents.Label {

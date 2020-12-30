@@ -599,6 +599,10 @@ Item {
     }
 
     Component.onCompleted: {
+        themeExtended.customBackground = Qt.binding(function() { return plasmoid.configuration.customBackgroundColor });
+        themeExtended.customForeground = Qt.binding(function() { return plasmoid.configuration.customForegroundColor });
+        themeExtended.useCustomColors = Qt.binding(function() { return plasmoid.configuration.themeColors === LatteContainment.Types.CustomThemeColors });
+
         //  currentLayout.isLayoutHorizontal = isHorizontal
         LayoutManager.plasmoid = plasmoid;
         LayoutManager.root = root;
@@ -613,7 +617,7 @@ Item {
         LayoutManager.restore();
         plasmoid.action("configure").visible = !plasmoid.immutable;
         plasmoid.action("configure").enabled = !plasmoid.immutable;
-
+;
         inStartupTimer.start();
     }
 

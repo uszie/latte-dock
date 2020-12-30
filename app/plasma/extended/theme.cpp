@@ -44,6 +44,7 @@
 
 #define DEFAULTCOLORSCHEME "default.colors"
 #define REVERSEDCOLORSCHEME "reversed.colors"
+#define CUSTOMCOLORSCHEME "custom.colors"
 
 namespace Latte {
 namespace PlasmaExtended {
@@ -99,6 +100,7 @@ Theme::~Theme()
 
     m_defaultScheme->deleteLater();
     m_reversedScheme->deleteLater();
+    m_customScheme->deleteLater();
 }
 
 bool Theme::hasShadow() const
@@ -166,6 +168,58 @@ WindowSystem::SchemeColors *Theme::darkTheme() const
     return !m_isLightTheme ? m_defaultScheme : m_reversedScheme;
 }
 
+QColor Theme::customBackground() const
+{
+    return m_customBackground;
+}
+
+void Theme::setCustomBackground(QColor &background)
+{
+    if (background == m_customBackground)
+        return;
+
+    m_customBackground = background;
+
+    if (m_useCustomColors){
+        updateAllSchemes();
+        emit themeChanged();
+    }
+}
+
+QColor Theme::customForeground() const
+{
+    return m_customForeground;
+}
+
+void Theme::setCustomForeground(QColor &foreground)
+{
+    if (foreground == m_customForeground)
+        return;
+
+    m_customForeground = foreground;
+
+    if (m_useCustomColors) {
+        updateAllSchemes();
+        emit themeChanged();
+    }
+}
+
+bool Theme::useCustomColors() const
+{
+    return m_useCustomColors;
+}
+
+void Theme::setUseCustomColors(bool enable)
+{
+    if (enable == m_useCustomColors)
+        return;
+
+    m_useCustomColors = enable;
+
+    updateAllSchemes();
+
+    emit themeChanged();
+}
 
 void Theme::setOriginalSchemeFile(const QString &file)
 {
@@ -177,12 +231,26 @@ void Theme::setOriginalSchemeFile(const QString &file)
 
     qDebug() << "plasma theme original colors ::: " << m_originalSchemePath;
 
+    updateAllSchemes();
+
+    emit themeChanged();
+}
+
+QString Theme::basicSchemePath() const
+{
+    return m_useCustomColors ? m_customSchemePath : m_originalSchemePath;
+}
+
+void Theme::updateAllSchemes()
+{
+    if (m_useCustomColors) {
+        updateCustomScheme();
+    }
+
     updateDefaultScheme();
     updateReversedScheme();
 
     loadThemeLightness();
-
-    emit themeChanged();
 }
 
 //! WM records need to be updated based on the colors that
@@ -196,7 +264,7 @@ void Theme::updateDefaultScheme()
         QFile(defaultFilePath).remove();
     }
 
-    QFile(m_originalSchemePath).copy(defaultFilePath);
+    QFile(basicSchemePath()).copy(defaultFilePath);
     m_defaultSchemePath = defaultFilePath;
 
     updateDefaultSchemeValues();
@@ -215,7 +283,7 @@ void Theme::updateDefaultScheme()
 void Theme::updateDefaultSchemeValues()
 {
     //! update WM values based on original scheme
-    KSharedConfigPtr originalPtr = KSharedConfig::openConfig(m_originalSchemePath);
+    KSharedConfigPtr originalPtr = KSharedConfig::openConfig(basicSchemePath());
     KSharedConfigPtr defaultPtr = KSharedConfig::openConfig(m_defaultSchemePath);
 
     if (originalPtr && defaultPtr) {
@@ -237,7 +305,7 @@ void Theme::updateReversedScheme()
         QFile(reversedFilePath).remove();
     }
 
-    QFile(m_originalSchemePath).copy(reversedFilePath);
+    QFile(basicSchemePath()).copy(reversedFilePath);
     m_reversedSchemePath = reversedFilePath;
 
     updateReversedSchemeValues();
@@ -254,7 +322,7 @@ void Theme::updateReversedScheme()
 void Theme::updateReversedSchemeValues()
 {
     //! reverse values based on original scheme
-    KSharedConfigPtr originalPtr = KSharedConfig::openConfig(m_originalSchemePath);
+    KSharedConfigPtr originalPtr = KSharedConfig::openConfig(basicSchemePath());
     KSharedConfigPtr reversedPtr = KSharedConfig::openConfig(m_reversedSchemePath);
 
     if (originalPtr && reversedPtr) {
@@ -304,6 +372,81 @@ void Theme::updateReversedSchemeValues()
         QString originalSchemeName = WindowSystem::SchemeColors::schemeName(m_originalSchemePath);
         KConfigGroup generalGroup(reversedPtr, "General");
         generalGroup.writeEntry("Name", originalSchemeName + "_reversed");
+        generalGroup.sync();
+    }
+}
+
+void Theme::updateCustomScheme()
+{
+    QString customFilePath = m_extendedThemeDir.path() + "/" + CUSTOMCOLORSCHEME;
+    if (QFileInfo(customFilePath).exists()) {
+        QFile(customFilePath).remove();
+    }
+
+    QFile(m_originalSchemePath).copy(customFilePath);
+    m_customSchemePath = customFilePath;
+
+    updateCustomSchemeValues();
+
+    if (m_customScheme) {
+        m_customScheme->deleteLater();
+    }
+
+    m_customScheme = new WindowSystem::SchemeColors(this, m_customSchemePath, true);
+
+    qDebug() << "plasma theme custom colors ::: " << m_customSchemePath;
+}
+
+void Theme::updateCustomSchemeValues()
+{
+    //! update WM values based on original scheme
+    KSharedConfigPtr originalPtr = KSharedConfig::openConfig(m_originalSchemePath);
+    KSharedConfigPtr customPtr = KSharedConfig::openConfig(m_customSchemePath);
+
+    if (originalPtr && customPtr) {
+        for (const auto &groupName : customPtr->groupList()) {
+            if (groupName != "Colors:Button" && groupName != "Colors:Selection") {
+                KConfigGroup customGroup(customPtr, groupName);
+
+                if (customGroup.keyList().contains("BackgroundNormal")
+                        && customGroup.keyList().contains("ForegroundNormal")) {
+                    //! set usual text/background values
+
+                    customGroup.writeEntry("BackgroundNormal", m_customBackground);
+                    customGroup.writeEntry("ForegroundNormal", m_customForeground);
+
+                    customGroup.sync();
+                }
+            }
+        }
+
+        //! update WM group
+        KConfigGroup customWMGroup(customPtr, "WM");
+        KConfigGroup normalWindowGroup(originalPtr, "Colors:Window");
+
+        if (customWMGroup.keyList().contains("activeBackground")
+                && customWMGroup.keyList().contains("activeForeground")
+                && customWMGroup.keyList().contains("inactiveBackground")
+                && customWMGroup.keyList().contains("inactiveForeground")) {
+            //! set usual wm titlebar values
+            customWMGroup.writeEntry("activeBackground", m_customBackground);
+            customWMGroup.writeEntry("activeForeground", m_customForeground);
+            customWMGroup.writeEntry("inactiveBackground", m_customBackground);
+            customWMGroup.writeEntry("inactiveForeground", m_customForeground);
+            customWMGroup.sync();
+        }
+
+        if (customWMGroup.keyList().contains("activeBlend")
+                && customWMGroup.keyList().contains("inactiveBlend")) {
+            customWMGroup.writeEntry("activeBlend", m_customBackground);
+            customWMGroup.writeEntry("inactiveBlend", m_customBackground);
+            customWMGroup.sync();
+        }
+
+        //! update scheme name
+        QString originalSchemeName = WindowSystem::SchemeColors::schemeName(m_originalSchemePath);
+        KConfigGroup generalGroup(customPtr, "General");
+        generalGroup.writeEntry("Name", originalSchemeName + "_custom");
         generalGroup.sync();
     }
 }
