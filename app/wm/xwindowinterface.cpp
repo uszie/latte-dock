@@ -41,6 +41,7 @@ XWindowInterface::XWindowInterface(QObject *parent)
     connect(KWindowSystem::self(), &KWindowSystem::windowRemoved, this, &AbstractWindowInterface::windowRemoved);
 
     connect(KWindowSystem::self(), &KWindowSystem::windowAdded, this, &XWindowInterface::windowAddedProxy);
+    connect(KWindowSystem::self(), &KWindowSystem::stackingOrderChanged, this, &XWindowInterface::stackingOrderChanged);
 
     connect(KWindowSystem::self(), &KWindowSystem::currentDesktopChanged, this, [&](int desktop) {
         m_currentDesktop = QString(desktop);
@@ -485,6 +486,9 @@ WindowInfoWrap XWindowInterface::requestInfo(WindowId wid)
         winfoWrap.setDisplay(winfo.visibleName());
         winfoWrap.setDesktops({QString(winfo.desktop())});
         winfoWrap.setActivities(winfo.activities());
+
+        auto stackingOrder = KWindowSystem::self()->stackingOrder();
+        winfoWrap.setStackingOrder(stackingOrder.indexOf(wid.value<WId>()));
     }
 
     if (plasmaBlockedWindow) {

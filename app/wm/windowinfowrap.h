@@ -108,6 +108,9 @@ public:
     QRect geometry() const;
     void setGeometry(const QRect &geometry);
 
+    int stackingOrder() const;
+    void setStackingOrder(int stackingDepth);
+
     QString appName() const;
     void setAppName(const QString &appName);
 
@@ -137,6 +140,7 @@ private:
     WindowId m_parentId{0};
 
     QRect m_geometry;
+    int m_stackingOrder;
 
     bool m_isValid{false};
     bool m_isActive{false};

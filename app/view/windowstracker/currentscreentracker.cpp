@@ -110,6 +110,7 @@ void  CurrentScreenTracker::init()
 void CurrentScreenTracker::initSignalsForInformation()
 {
     emit lastActiveWindowChanged();
+    emit toplevelMaximizedWindowChanged();
     emit activeWindowMaximizedChanged();
     emit activeWindowTouchingChanged();
     emit activeWindowTouchingEdgeChanged();
@@ -174,6 +175,11 @@ WindowSystem::SchemeColors *CurrentScreenTracker::touchingWindowScheme() const
 WindowSystem::Tracker::LastActiveWindow *CurrentScreenTracker::lastActiveWindow()
 {
     return m_wm->windowsTracker()->lastActiveWindow(m_latteView);
+}
+
+WindowSystem::Tracker::LastActiveWindow *CurrentScreenTracker::toplevelMaximizedWindow()
+{
+    return m_wm->windowsTracker()->toplevelMaximizedWindow(m_latteView);
 }
 
 

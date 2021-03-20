@@ -19,6 +19,7 @@ WindowInfoWrap::WindowInfoWrap(const WindowInfoWrap &o)
     : m_wid(o.m_wid)
     , m_parentId(o.m_parentId)
     , m_geometry(o.m_geometry)
+    , m_stackingOrder(o.m_stackingOrder)
     , m_isValid(o.m_isValid)
     , m_isActive(o.m_isActive)
     , m_isMinimized(o.m_isMinimized)
@@ -52,6 +53,7 @@ WindowInfoWrap::WindowInfoWrap(WindowInfoWrap &&o)
     : m_wid(o.m_wid)
     , m_parentId(o.m_parentId)
     , m_geometry(o.m_geometry)
+    , m_stackingOrder(o.m_stackingOrder)
     , m_isValid(o.m_isValid)
     , m_isActive(o.m_isActive)
     , m_isMinimized(o.m_isMinimized)
@@ -88,6 +90,7 @@ WindowInfoWrap &WindowInfoWrap::operator=(WindowInfoWrap &&rhs)
     m_wid = rhs.m_wid;
     m_parentId = rhs.m_parentId;
     m_geometry = rhs.m_geometry;
+    m_stackingOrder = rhs.m_stackingOrder;
     m_isValid = rhs.m_isValid;
     m_isActive = rhs.m_isActive;
     m_isMinimized = rhs.m_isMinimized;
@@ -123,6 +126,7 @@ WindowInfoWrap &WindowInfoWrap::operator=(const WindowInfoWrap &rhs)
     m_wid = rhs.m_wid;
     m_parentId = rhs.m_parentId;
     m_geometry = rhs.m_geometry;
+    m_stackingOrder = rhs.m_stackingOrder;
     m_isValid = rhs.m_isValid;
     m_isActive = rhs.m_isActive;
     m_isMinimized = rhs.m_isMinimized;
@@ -433,6 +437,16 @@ QRect WindowInfoWrap::geometry() const
 void WindowInfoWrap::setGeometry(const QRect &geometry)
 {
     m_geometry = geometry;
+}
+
+int WindowInfoWrap::stackingOrder() const
+{
+    return m_stackingOrder;
+}
+
+void WindowInfoWrap::setStackingOrder(int order)
+{
+    m_stackingOrder = order;
 }
 
 WindowId WindowInfoWrap::wid() const
