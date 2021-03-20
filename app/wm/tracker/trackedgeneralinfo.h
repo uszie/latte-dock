@@ -31,6 +31,7 @@ class TrackedGeneralInfo : public QObject {
     Q_OBJECT
 
     Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *activeWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
+    Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *toplevelMaximizedWindow READ toplevelMaximizedWindow NOTIFY toplevelMaximizedWindowChanged)
 
 public:
     TrackedGeneralInfo(Tracker::Windows *tracker);
@@ -53,12 +54,16 @@ public:
 
     LastActiveWindow *lastActiveWindow() const;
 
+    LastActiveWindow *toplevelMaximizedWindow() const;
+
     SchemeColors *activeWindowScheme() const;
     void setActiveWindowScheme(SchemeColors *scheme);
 
     AbstractWindowInterface *wm();
 
     void setActiveWindow(const WindowId &wid);
+
+    void setToplevelMaximizedWindow(const WindowId &wid);
 
     //! windows that are not shown but are tracked should not be removed from history but give their place to other shown windows
     bool isShown(const WindowInfoWrap &winfo) const;
@@ -67,6 +72,7 @@ public:
 
 signals:
     void lastActiveWindowChanged();
+    void toplevelMaximizedWindowChanged();
 
 protected:
     void updateTrackingCurrentActivity();
@@ -75,6 +81,7 @@ protected:
     QStringList m_activities;
 
     LastActiveWindow *m_lastActiveWindow{nullptr};
+    LastActiveWindow *m_toplevelMaximizedWindow{nullptr};
     AbstractWindowInterface *m_wm{nullptr};
     Tracker::Windows *m_tracker{nullptr};
 

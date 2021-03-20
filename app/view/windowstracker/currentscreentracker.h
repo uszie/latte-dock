@@ -46,6 +46,7 @@ class CurrentScreenTracker : public QObject {
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *touchingWindowScheme READ touchingWindowScheme NOTIFY touchingWindowSchemeChanged)
 
     Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *lastActiveWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
+    Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *toplevelMaximizedWindow READ toplevelMaximizedWindow NOTIFY toplevelMaximizedWindowChanged)
 
 public:
     explicit CurrentScreenTracker(WindowsTracker *parent);
@@ -65,6 +66,7 @@ public:
     WindowSystem::SchemeColors *touchingWindowScheme() const;
 
     WindowSystem::Tracker::LastActiveWindow *lastActiveWindow();
+    WindowSystem::Tracker::LastActiveWindow *toplevelMaximizedWindow();
 
 public slots:
     Q_INVOKABLE void requestMoveLastWindow(int localX, int localY);
@@ -83,6 +85,7 @@ signals:
     void touchingWindowSchemeChanged();
 
     void lastActiveWindowChanged();
+    void toplevelMaximizedWindowChanged();
 
 private slots:
     void initSignalsForInformation();

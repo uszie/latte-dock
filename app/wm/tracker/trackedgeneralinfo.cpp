@@ -23,12 +23,14 @@ TrackedGeneralInfo::TrackedGeneralInfo(Tracker::Windows *tracker)
       m_tracker(tracker)
 {
     m_lastActiveWindow = new LastActiveWindow(this);
+    m_toplevelMaximizedWindow = new LastActiveWindow(this);
 
     connect(m_wm, &AbstractWindowInterface::currentActivityChanged, this, [&]() {
         updateTrackingCurrentActivity();
     });
 
     emit lastActiveWindowChanged();
+    emit toplevelMaximizedWindowChanged();
 }
 
 TrackedGeneralInfo::~TrackedGeneralInfo()
@@ -39,6 +41,14 @@ TrackedGeneralInfo::~TrackedGeneralInfo()
         emit lastActiveWindowChanged();
 
         law->deleteLater();
+    }
+
+    if (m_toplevelMaximizedWindow) {
+        auto tmw = m_toplevelMaximizedWindow;
+        m_toplevelMaximizedWindow = nullptr;
+        emit toplevelMaximizedWindowChanged();
+
+        tmw->deleteLater();
     }
 }
 
@@ -118,6 +128,11 @@ LastActiveWindow *TrackedGeneralInfo::lastActiveWindow() const
     return m_lastActiveWindow;
 }
 
+LastActiveWindow *TrackedGeneralInfo::toplevelMaximizedWindow() const
+{
+    return m_toplevelMaximizedWindow;
+}
+
 SchemeColors *TrackedGeneralInfo::activeWindowScheme() const
 {
     return m_activeWindowScheme;
@@ -140,6 +155,11 @@ AbstractWindowInterface *TrackedGeneralInfo::wm()
 void TrackedGeneralInfo::setActiveWindow(const WindowId &wid)
 {
     m_lastActiveWindow->setInformation(m_tracker->infoFor(wid));
+}
+
+void TrackedGeneralInfo::setToplevelMaximizedWindow(const WindowId &wid)
+{
+    m_toplevelMaximizedWindow->setInformation((m_tracker->infoFor(wid)));
 }
 
 bool TrackedGeneralInfo::isTracking(const WindowInfoWrap &winfo) const

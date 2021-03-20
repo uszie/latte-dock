@@ -139,6 +139,7 @@ signals:
     void windowChanged(WindowId winfo);
     void windowAdded(WindowId wid);
     void windowRemoved(WindowId wid);
+    void stackingOrderChanged();
     void currentDesktopChanged();
     void currentActivityChanged();
 

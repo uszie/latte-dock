@@ -63,6 +63,7 @@ public:
     SchemeColors *activeWindowScheme(Latte::View *view) const;
     SchemeColors *touchingWindowScheme(Latte::View *view) const;
     LastActiveWindow *lastActiveWindow(Latte::View *view);
+    LastActiveWindow *toplevelMaximizedWindow(Latte::View *view);
 
     //! Layouts Tracking (all screens)
     bool enabled(Latte::Layout::GenericLayout *layout);
@@ -71,6 +72,7 @@ public:
     bool existsWindowMaximized(Latte::Layout::GenericLayout *layout) const;
     SchemeColors *activeWindowScheme(Latte::Layout::GenericLayout *layout) const;
     LastActiveWindow *lastActiveWindow(Latte::Layout::GenericLayout *layout);
+    LastActiveWindow *toplevelMaximizedWindow(Latte::Layout::GenericLayout *layout);
 
     //! Windows management
     bool isValidFor(const WindowId &wid) const;
@@ -108,6 +110,7 @@ signals:
     void activeWindowChanged(const WindowId &wid);
     void windowChanged(const WindowId &wid);
     void windowRemoved(const WindowId &wid);
+    void stackingOrderChanged();
 
     void applicationDataChanged(const WindowId &wid);
 
