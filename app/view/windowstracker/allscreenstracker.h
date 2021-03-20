@@ -40,6 +40,7 @@ class AllScreensTracker : public QObject {
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *activeWindowScheme READ activeWindowScheme NOTIFY activeWindowSchemeChanged)
 
     Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *lastActiveWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
+    Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *toplevelMaximizedWindow READ toplevelMaximizedWindow NOTIFY toplevelMaximizedWindowChanged)
 
 public:
     explicit AllScreensTracker(WindowsTracker *parent);
@@ -53,6 +54,8 @@ public:
 
     WindowSystem::Tracker::LastActiveWindow *lastActiveWindow();
 
+    WindowSystem::Tracker::LastActiveWindow *toplevelMaximizedWindow();
+
 public slots:
     Q_INVOKABLE void requestMoveLastWindow(int localX, int localY);
 
@@ -63,6 +66,7 @@ signals:
     void activeWindowSchemeChanged();
 
     void lastActiveWindowChanged();
+    void toplevelMaximizedWindowChanged();
 
 private slots:
     void initSignalsForInformation();
@@ -72,6 +76,7 @@ private:
 
 private:
     Latte::WindowSystem::Tracker::LastActiveWindow *m_currentLastActiveWindow{nullptr};
+    Latte::WindowSystem::Tracker::LastActiveWindow *m_currentToplevelMaximizedWindow{nullptr};
 
     Latte::View *m_latteView{nullptr};
     WindowSystem::AbstractWindowInterface *m_wm{nullptr};

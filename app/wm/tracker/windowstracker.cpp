@@ -90,6 +90,16 @@ void Windows::init()
         updateAllHints();
     });
 
+    connect(m_wm, &AbstractWindowInterface::stackingOrderChanged, this, [&] {
+        for (auto wid : m_windows.keys()){
+            m_windows[wid] = m_wm->requestInfo(wid);
+        }
+
+        updateAllHints();
+
+        emit stackingOrderChanged();
+    });
+
     connect(m_wm, &AbstractWindowInterface::activeWindowChanged, this, [&](WindowId wid) {
         //! for some reason this is needed in order to update properly activeness values
         //! when the active window changes the previous active windows should be also updated
@@ -492,6 +502,15 @@ LastActiveWindow *Windows::lastActiveWindow(Latte::View *view)
     return m_views[view]->lastActiveWindow();
 }
 
+LastActiveWindow *Windows::toplevelMaximizedWindow(View *view)
+{
+    if (!m_views.contains(view)) {
+        return nullptr;
+    }
+
+    return m_views[view]->toplevelMaximizedWindow();
+}
+
 //! Layouts
 bool Windows::enabled(Latte::Layout::GenericLayout *layout)
 {
@@ -585,6 +604,15 @@ LastActiveWindow *Windows::lastActiveWindow(Latte::Layout::GenericLayout *layout
     }
 
     return m_layouts[layout]->lastActiveWindow();
+}
+
+LastActiveWindow *Windows::toplevelMaximizedWindow(Layout::GenericLayout *layout)
+{
+    if (!m_layouts.contains(layout)) {
+        return nullptr;
+    }
+
+    return m_layouts[layout]->toplevelMaximizedWindow();
 }
 
 
@@ -859,6 +887,7 @@ void Windows::updateHints(Latte::View *view)
         return;
     }
 
+    int maxStackingOrder{-1};
     bool foundActive{false};
     bool foundActiveInCurScreen{false};
     bool foundActiveTouchInCurScreen{false};
@@ -873,6 +902,7 @@ void Windows::updateHints(Latte::View *view)
     //! maybe a garbage collector here is a good idea!!!
     bool existsFaultyWindow{false};
 
+//    WindowId topMaxWinId;
     WindowId maxWinId;
     WindowId activeWinId;
     WindowId touchWinId;
@@ -907,8 +937,8 @@ void Windows::updateHints(Latte::View *view)
         }
 
         //! Maximized windows flags
-        if ((winfo.isActive() && isMaximizedInViewScreen(view, winfo)) //! active maximized windows have higher priority than the rest maximized windows
-                || (!foundMaximizedInCurScreen && isMaximizedInViewScreen(view, winfo))) {
+        if (isMaximizedInViewScreen(view, winfo) && winfo.stackingOrder() > maxStackingOrder) {
+            maxStackingOrder = winfo.stackingOrder();
             foundMaximizedInCurScreen = true;
             maxWinId = winfo.wid();
         }
@@ -1021,6 +1051,13 @@ void Windows::updateHints(Latte::View *view)
     //! update LastActiveWindow
     if (foundActiveInCurScreen) {
         m_views[view]->setActiveWindow(activeWinId);
+    }
+
+    if (foundMaximizedInCurScreen) {
+        m_views[view]->setToplevelMaximizedWindow(maxWinId);
+    }
+    else {
+        m_views[view]->setToplevelMaximizedWindow(0);
     }
 
     //! Debug

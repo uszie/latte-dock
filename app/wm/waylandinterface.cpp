@@ -145,6 +145,12 @@ void WaylandInterface::initWindowManagement(KWayland::Client::PlasmaWindowManage
         }
 
     }, Qt::QueuedConnection);
+
+#if KF5_VERSION_MINOR >= 81 // stackingOrderUuids is deprecated since 5.73 but not working until 5.81 for wayland
+    connect(m_windowManagement, &PlasmaWindowManagement::stackingOrderUuidsChanged, this, &WaylandInterface::stackingOrderChanged);
+#elif KF5_VERSION_MINOR >= 70
+    connect(m_windowManagement, &PlasmaWindowManagement::stackingOrderChanged, this, &WaylandInterface::stackingOrderChanged);
+#endif
 }
 
 #if KF5_VERSION_MINOR >= 52
@@ -562,6 +568,12 @@ WindowInfoWrap WaylandInterface::requestInfo(WindowId wid)
         winfoWrap.setActivities(w->plasmaActivities());
 #else
         winfoWrap.setActivities(QStringList());
+#if KF5_VERSION_MINOR >= 81 // stackingOrderUuids is deprecated since 5.73 but not working until 5.81 for wayland
+        auto stackingOrder = m_windowManagement->stackingOrderUuids();
+        winfoWrap.setStackingOrder(stackingOrder.indexOf(wid.value<QByteArray>()));
+#elif KF5_VERSION_MINOR >= 70
+        auto stackingOrder = m_windowManagement->stackingOrder();
+        winfoWrap.setStackingOrder(stackingOrder.indexOf(wid.value<int>()));
 #endif
     } else {
         winfoWrap.setIsValid(false);
