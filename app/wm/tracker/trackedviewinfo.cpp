@@ -130,6 +130,20 @@ void TrackedViewInfo::setTouchingWindowScheme(SchemeColors *scheme)
     m_touchingWindowScheme = scheme;
 }
 
+SchemeColors *TrackedViewInfo::maximizedWindowScheme() const
+{
+    return m_maximizedWindowScheme;
+}
+
+void TrackedViewInfo::setMaximizedWindowScheme(SchemeColors *scheme)
+{
+    if (m_maximizedWindowScheme == scheme) {
+        return;
+    }
+
+    m_maximizedWindowScheme = scheme;
+}
+
 Latte::View *TrackedViewInfo::view() const
 {
     return m_view;

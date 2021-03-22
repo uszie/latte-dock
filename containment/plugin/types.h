@@ -55,14 +55,17 @@ public:
     {
         NoneWindowColors = 0,
         ActiveWindowColors,
-        TouchingWindowColors
+        TouchingWindowColors,
+        MaximizedWindowColors
     };
     Q_ENUM(WindowColorsGroup);
 
     enum ActiveWindowFilterGroup
     {
         ActiveInCurrentScreen = 0,
-        ActiveFromAllScreens
+        ActiveFromAllScreens,
+        MaximizedInCurrentScreen,
+        MaximizedFromAllScreens
     };
     Q_ENUM(ActiveWindowFilterGroup);
 };

@@ -50,17 +50,17 @@ Loader {
         property int lastPressY: -1
 
         onClicked: {
-            if (root.closeActiveWindowEnabled && mouse.button === Qt.MidButton) {
-                selectedWindowsTracker.lastActiveWindow.requestClose();
+            if (root.closeWindowEnabled && mouse.button === Qt.MidButton) {
+                operatingWindow.requestClose();
             }
         }
 
         onPressed: {
-            if (!root.dragActiveWindowEnabled) {
+            if (!root.dragWindowEnabled) {
                 return;
             }
 
-            if (mouse.button === Qt.LeftButton && selectedWindowsTracker.lastActiveWindow.canBeDragged()) {
+            if (mouse.button === Qt.LeftButton && operatingWindow.canBeDragged()) {
                 lastPressX = mouse.x;
                 lastPressY = mouse.y;
                 dragWindowTimer.start();
@@ -73,7 +73,7 @@ Loader {
         }
 
         onPositionChanged: {
-            if (!root.dragActiveWindowEnabled || !(mainArea.pressedButtons & Qt.LeftButton)) {
+            if (!root.dragWindowEnabled || !(mainArea.pressedButtons & Qt.LeftButton)) {
                 return;
             }
 
@@ -83,19 +83,19 @@ Loader {
 
             var tryDrag = mainArea.pressed && (stepX>threshold || stepY>threshold);
 
-            if ( tryDrag && selectedWindowsTracker.lastActiveWindow.canBeDragged()) {
+            if ( tryDrag && operatingWindow.canBeDragged()) {
                 dragWindowTimer.stop();
                 activateDragging();
             }
         }
 
         onDoubleClicked: {
-            if (!root.dragActiveWindowEnabled) {
+            if (!root.dragWindowEnabled) {
                 return;
             }
 
             dragWindowTimer.stop();
-            selectedWindowsTracker.lastActiveWindow.requestToggleMaximized();
+            operatingWindow.requestToggleMaximized();
         }
 
         onWheel: {
@@ -171,7 +171,10 @@ Loader {
         }
 
         function activateDragging(){
-            selectedWindowsTracker.requestMoveLastWindow(mainArea.mouseX, mainArea.mouseY);
+            if (operatingWindow === selectedWindowsTracker.toplevelMaximizedWindow)
+                selectedWindowsTracker.requestMoveMaximizedWindow(mainArea.mouseX, mainArea.mouseY);
+            else
+                selectedWindowsTracker.requestMoveLastWindow(mainArea.mouseX, mainArea.mouseY);
             mainArea.lastPressX = -1;
             mainArea.lastPressY = -1;
         }
@@ -181,7 +184,7 @@ Loader {
             id: dragWindowTimer
             interval: 500
             onTriggered: {
-                if (mainArea.pressed && selectedWindowsTracker.lastActiveWindow.canBeDragged()) {
+                if (mainArea.pressed && operatingWindow.canBeDragged()) {
                     mainArea.activateDragging();
                 }
             }

@@ -56,7 +56,8 @@ Loader{
                                                   && selectedWindowsTracker.activeWindowScheme)
                                                  || (root.windowColors === LatteContainment.Types.TouchingWindowColors && latteView && latteView.windowsTracker
                                                      && latteView.windowsTracker.currentScreen.touchingWindowScheme)
-
+                                                 || (root.windowColors === LatteContainment.Types.MaximizedWindowColors && latteView && latteView.windowsTracker
+                                                     && latteView.windowsTracker.currentScreen.maximizedWindowScheme)
     property QtObject applyTheme: {
         if (!root.environment.isGraphicsSystemAccelerated) {
             return theme;
@@ -77,6 +78,10 @@ Loader{
                 }
 
                 return latteView.windowsTracker.currentScreen.touchingWindowScheme;
+            }
+
+            if (root.windowColors === LatteContainment.Types.MaximizedWindowColors && latteView.windowsTracker.currentScreen.maximizedWindowScheme) {
+                return latteView.windowsTracker.currentScreen.maximizedWindowScheme;
             }
         }
 

@@ -70,7 +70,7 @@ Grid {
                 //plasmoid.configuration.autoDecreaseIconSize = true;
 
                 //! Empty Areas
-                plasmoid.configuration.dragActiveWindowEnabled = false;
+                plasmoid.configuration.dragWindowEnabled = false;
                 plasmoid.configuration.scrollAction = LatteContainment.Types.ScrollNone;
 
                 //! Items
@@ -116,7 +116,7 @@ Grid {
                 //plasmoid.configuration.autoDecreaseIconSize = false;
 
                 //! Empty Areas
-                plasmoid.configuration.dragActiveWindowEnabled = true;
+                plasmoid.configuration.dragWindowEnabled = true;
 
                 //! Items
                 plasmoid.configuration.autoSizeEnabled = false;

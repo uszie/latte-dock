@@ -58,6 +58,7 @@ public:
 
 public slots:
     Q_INVOKABLE void requestMoveLastWindow(int localX, int localY);
+    Q_INVOKABLE void requestMoveMaximizedWindow(int localX, int localY);
 
 signals:
     void activeWindowMaximizedChanged();

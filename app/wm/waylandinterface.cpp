@@ -568,9 +568,11 @@ WindowInfoWrap WaylandInterface::requestInfo(WindowId wid)
         winfoWrap.setActivities(w->plasmaActivities());
 #else
         winfoWrap.setActivities(QStringList());
+#endif
+
 #if KF5_VERSION_MINOR >= 81 // stackingOrderUuids is deprecated since 5.73 but not working until 5.81 for wayland
         auto stackingOrder = m_windowManagement->stackingOrderUuids();
-        winfoWrap.setStackingOrder(stackingOrder.indexOf(wid.value<QByteArray>()));
+        winfoWrap.setStackingOrder(stackingOrder.indexOf(w->uuid()));
 #elif KF5_VERSION_MINOR >= 70
         auto stackingOrder = m_windowManagement->stackingOrder();
         winfoWrap.setStackingOrder(stackingOrder.indexOf(wid.value<int>()));

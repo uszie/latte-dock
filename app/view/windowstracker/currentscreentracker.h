@@ -44,6 +44,7 @@ class CurrentScreenTracker : public QObject {
     Q_PROPERTY(bool isTouchingBusyVerticalView READ isTouchingBusyVerticalView NOTIFY isTouchingBusyVerticalViewChanged)
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *activeWindowScheme READ activeWindowScheme NOTIFY activeWindowSchemeChanged)
     Q_PROPERTY(Latte::WindowSystem::SchemeColors *touchingWindowScheme READ touchingWindowScheme NOTIFY touchingWindowSchemeChanged)
+    Q_PROPERTY(Latte::WindowSystem::SchemeColors *maximizedWindowScheme READ maximizedWindowScheme NOTIFY maximizedWindowSchemeChanged)
 
     Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *lastActiveWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
     Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *toplevelMaximizedWindow READ toplevelMaximizedWindow NOTIFY toplevelMaximizedWindowChanged)
@@ -64,12 +65,14 @@ public:
 
     WindowSystem::SchemeColors *activeWindowScheme() const;
     WindowSystem::SchemeColors *touchingWindowScheme() const;
+    WindowSystem::SchemeColors *maximizedWindowScheme() const;
 
     WindowSystem::Tracker::LastActiveWindow *lastActiveWindow();
     WindowSystem::Tracker::LastActiveWindow *toplevelMaximizedWindow();
 
 public slots:
     Q_INVOKABLE void requestMoveLastWindow(int localX, int localY);
+    Q_INVOKABLE void requestMoveMaximizedWindow(int localX, int localY);
 
 signals:
     void activeWindowMaximizedChanged();
@@ -83,6 +86,7 @@ signals:
 
     void activeWindowSchemeChanged();
     void touchingWindowSchemeChanged();
+    void maximizedWindowSchemeChanged();
 
     void lastActiveWindowChanged();
     void toplevelMaximizedWindowChanged();

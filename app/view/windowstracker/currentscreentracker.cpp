@@ -105,6 +105,12 @@ void  CurrentScreenTracker::init()
             emit touchingWindowSchemeChanged();
         }
     });
+
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::maximizedWindowSchemeChanged, this, [&](const Latte::View *view) {
+        if (m_latteView == view) {
+            emit maximizedWindowSchemeChanged();
+        }
+    });
 }
 
 void CurrentScreenTracker::initSignalsForInformation()
@@ -120,6 +126,7 @@ void CurrentScreenTracker::initSignalsForInformation()
     emit existsWindowTouchingEdgeChanged();
     emit activeWindowSchemeChanged();
     emit touchingWindowSchemeChanged();
+    emit maximizedWindowSchemeChanged();
 }
 
 bool CurrentScreenTracker::activeWindowMaximized() const
@@ -172,6 +179,11 @@ WindowSystem::SchemeColors *CurrentScreenTracker::touchingWindowScheme() const
     return m_wm->windowsTracker()->touchingWindowScheme(m_latteView);
 }
 
+WindowSystem::SchemeColors *CurrentScreenTracker::maximizedWindowScheme() const
+{
+    return m_wm->windowsTracker()->maximizedWindowScheme(m_latteView);
+}
+
 WindowSystem::Tracker::LastActiveWindow *CurrentScreenTracker::lastActiveWindow()
 {
     return m_wm->windowsTracker()->lastActiveWindow(m_latteView);
@@ -187,6 +199,14 @@ WindowSystem::Tracker::LastActiveWindow *CurrentScreenTracker::toplevelMaximized
 void CurrentScreenTracker::requestMoveLastWindow(int localX, int localY)
 {
     m_wm->windowsTracker()->lastActiveWindow(m_latteView)->requestMove(m_latteView, localX, localY);
+}
+
+void CurrentScreenTracker::requestMoveMaximizedWindow(int localX, int localY)
+{
+    if (!m_wm->windowsTracker()->toplevelMaximizedWindow(m_latteView))
+        return;
+
+    m_wm->windowsTracker()->toplevelMaximizedWindow(m_latteView)->requestMove(m_latteView, localX, localY);
 }
 
 }

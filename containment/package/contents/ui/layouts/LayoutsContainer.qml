@@ -249,7 +249,7 @@ Item{
     onYChanged: root.updateEffectsArea();
 
     EnvironmentActions {
-        active: root.scrollAction !== LatteContainment.Types.ScrollNone || root.dragActiveWindowEnabled || root.closeActiveWindowEnabled
+        active: root.scrollAction !== LatteContainment.Types.ScrollNone || root.dragWindowEnabled || root.closeWindowEnabled
         alignment: _mainLayout.alignment
     }
 
