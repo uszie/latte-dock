@@ -62,6 +62,7 @@ public:
     bool isTouchingBusyVerticalView(Latte::View *view) const;
     SchemeColors *activeWindowScheme(Latte::View *view) const;
     SchemeColors *touchingWindowScheme(Latte::View *view) const;
+    SchemeColors *maximizedWindowScheme(Latte::View *view) const;
     LastActiveWindow *lastActiveWindow(Latte::View *view);
     LastActiveWindow *toplevelMaximizedWindow(Latte::View *view);
 
@@ -95,6 +96,7 @@ signals:
     void isTouchingBusyVerticalViewChanged(const Latte::View *view);
     void activeWindowSchemeChanged(const Latte::View *view);
     void touchingWindowSchemeChanged(const Latte::View *view);
+    void maximizedWindowSchemeChanged(const Latte::View *view);
     void informationAnnounced(const Latte::View *view);
 
     //! Layouts
@@ -146,6 +148,7 @@ private:
     void setIsTouchingBusyVerticalView(Latte::View *view, bool viewTouching);
     void setActiveWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme);
     void setTouchingWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme);
+    void setMaximizedWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme);
 
     //! Layouts
     void setActiveWindowMaximized(Latte::Layout::GenericLayout *layout, bool activeMaximized);

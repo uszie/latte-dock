@@ -155,6 +155,7 @@ void Windows::initViewHints(Latte::View *view)
     setIsTouchingBusyVerticalView(view, false);
     setActiveWindowScheme(view, nullptr);
     setTouchingWindowScheme(view, nullptr);
+    setMaximizedWindowScheme(view, nullptr);
 }
 
 AbstractWindowInterface *Windows::wm()
@@ -482,6 +483,7 @@ SchemeColors *Windows::touchingWindowScheme(Latte::View *view) const
     return m_views[view]->touchingWindowScheme();
 }
 
+
 void Windows::setTouchingWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme)
 {
     if (!m_views.contains(view) || m_views[view]->touchingWindowScheme() == scheme) {
@@ -490,6 +492,25 @@ void Windows::setTouchingWindowScheme(Latte::View *view, WindowSystem::SchemeCol
 
     m_views[view]->setTouchingWindowScheme(scheme);
     emit touchingWindowSchemeChanged(view);
+}
+
+SchemeColors *Windows::maximizedWindowScheme(View *view) const
+{
+    if (!m_views.contains(view)) {
+        return nullptr;
+    }
+
+    return m_views[view]->maximizedWindowScheme();
+}
+
+void Windows::setMaximizedWindowScheme(View *view, SchemeColors *scheme)
+{
+    if (!m_views.contains(view) || m_views[view]->maximizedWindowScheme() == scheme) {
+        return;
+    }
+
+    m_views[view]->setMaximizedWindowScheme(scheme);
+    emit maximizedWindowSchemeChanged(view);
 }
 
 LastActiveWindow *Windows::lastActiveWindow(Latte::View *view)
@@ -1088,6 +1109,8 @@ void Windows::updateHints(Latte::View *view)
     } else {
         setTouchingWindowScheme(view, nullptr);
     }
+
+    setMaximizedWindowScheme(view, (foundMaximizedInCurScreen ? m_wm->schemesTracker()->schemeForWindow(maxWinId) : nullptr));
 
     //! update LastActiveWindow
     if (foundActiveInCurScreen) {

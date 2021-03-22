@@ -458,7 +458,7 @@ Item {
         //console.log(" WRAPPER :: " + choords.x + " _ " + choords.y);
 
         var inThicknessNeutralArea = !wrapperContainsMouse && (appletItem.metrics.margin.screenEdge>0);
-        var appletNeutralAreaEnabled = !(inThicknessNeutralArea && root.dragActiveWindowEnabled);
+        var appletNeutralAreaEnabled = !(inThicknessNeutralArea && root.dragWindowEnabled);
 
         if (appletItemContainsMouse && !wrapperContainsMouse && appletNeutralAreaEnabled) {
             //console.log("PASSED");

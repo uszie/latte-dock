@@ -143,6 +143,7 @@ Item {
                                          && !(latteView.windowsTracker.currentScreen.existsWindowTouching
                                               || latteView.windowsTracker.currentScreen.existsWindowTouchingEdge)
                                          && !(windowColors === LatteContainment.Types.ActiveWindowColors && selectedWindowsTracker.existsWindowActive)
+                                         && !(windowColors === LatteContainment.Types.MaximizedWindowColors && selectedWindowsTracker.existsWindowMaximized)
 
     property bool forcePanelForBusyBackground: userShowPanelBackground && (normalBusyForTouchingBusyVerticalView
                                                                            || ( root.forceTransparentPanel
@@ -176,8 +177,8 @@ Item {
 
     readonly property bool inConfigureAppletsMode: root.editMode && universalSettings && universalSettings.inConfigureAppletsMode
 
-    property bool closeActiveWindowEnabled: plasmoid.configuration.closeActiveWindowEnabled
-    property bool dragActiveWindowEnabled: plasmoid.configuration.dragActiveWindowEnabled
+    property bool closeWindowEnabled: plasmoid.configuration.closeWindowEnabled
+    property bool dragWindowEnabled: plasmoid.configuration.dragWindowEnabled
     property bool immutable: plasmoid.immutable
     property bool inFullJustify: (plasmoid.configuration.alignment === LatteCore.Types.Justify) && (maxLengthPerCentage===100)
     property bool inStartup: true
@@ -246,9 +247,9 @@ Item {
         if (inConfigureAppletsMode) {
             return plasmoid.configuration.panelShadows;
         }
-
+        //disable shadow for any maximized window
         var forcedNoShadows = (plasmoid.configuration.panelShadows && disablePanelShadowMaximized
-                               && latteView && latteView.windowsTracker && latteView.windowsTracker.currentScreen.activeWindowMaximized);
+                               && latteView && latteView.windowsTracker && latteView.windowsTracker.currentScreen.existsWindowMaximized);
 
         if (forcedNoShadows) {
             return false;
@@ -334,9 +335,26 @@ Item {
         if (latteView && latteView.windowsTracker) {
             switch(plasmoid.configuration.activeWindowFilter) {
             case LatteContainment.Types.ActiveInCurrentScreen:
+            case LatteContainment.Types.MaximizedInCurrentScreen:
                 return latteView.windowsTracker.currentScreen;
             case LatteContainment.Types.ActiveFromAllScreens:
+            case LatteContainment.Types.MaximizedFromAllScreens:
                 return latteView.windowsTracker.allScreens;
+            }
+        }
+
+        return null;
+    }
+
+    readonly property QtObject operatingWindow: {
+        if (selectedWindowsTracker) {
+            switch(plasmoid.configuration.activeWindowFilter) {
+            case LatteContainment.Types.ActiveInCurrentScreen:
+            case LatteContainment.Types.ActiveFromAllScreens:
+                return selectedWindowsTracker.lastActiveWindow;
+            case LatteContainment.Types.MaximizedInCurrentScreen:
+            case LatteContainment.Types.MaximizedFromAllScreens:
+                return selectedWindowsTracker.toplevelMaximizedWindow;
             }
         }
 
