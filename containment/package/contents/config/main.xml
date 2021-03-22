@@ -150,6 +150,7 @@
             <choice name="NoneWindowColors"/>
             <choice name="ActiveWindowColors"/>
             <choice name="TouchingWindowColors"/>
+            <choice name="MaximizedWindowColors"/>
       </choices>
       <default>0</default>
       <label>which color palette is going to be used based on windows</label>
@@ -190,18 +191,20 @@
     <entry name="offset" type="Double">
       <default>0</default>
     </entry>
-    <entry name="dragActiveWindowEnabled" type="Bool">
+    <entry name="dragWindowEnabled" type="Bool">
       <default>false</default>
-      <label>Drag and maximize/restore active window from empty areas</label>
+      <label>Drag and maximize/restore window from empty areas</label>
     </entry>
-    <entry name="closeActiveWindowEnabled" type="Bool">
+    <entry name="closeWindowEnabled" type="Bool">
       <default>false</default>
       <label>Close active window from empty areas</label>
     </entry>    
     <entry name="activeWindowFilter" type="Enum">
       <choices>
-            <choice name="InCurrentScreen"/>
-            <choice name="FromAllScreens"/>
+            <choice name="ActiveInCurrentScreen"/>
+            <choice name="ActiveFromAllScreens"/>
+            <choice name="MaximizedInCurrentScreen"/>
+            <choice name="MaximizedFromAllScreens"/>
       </choices>
       <default>0</default>
     </entry>

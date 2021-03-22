@@ -645,14 +645,16 @@ PlasmaComponents.Page {
                             id: trackActiveLbl
                             Layout.minimumWidth: actionsPropertiesColumn.maxLabelWidth
                             Layout.maximumWidth: actionsPropertiesColumn.maxLabelWidth
-                            text: i18nc("track active window","Track")
+                            text: i18nc("track window","Track")
                         }
 
                         LatteComponents.ComboBox {
                             id: activeWindowFilterCmb
                             Layout.fillWidth: true
-                            model: [i18nc("track from current screen", "Active Window From Current Screen"),
-                                i18nc("track from all screens", "Active Window From All Screens")]
+                            model: [i18nc("track active from current screen", "Active Window From Current Screen"),
+                                i18nc("track active from all screens", "Active Window From All Screens"),
+                                i18nc("track maximized from current screen", "Maximized Window From Current Screen"),
+                                i18nc("track maximized from all screens", "Maximized Window From All Screens")]
 
                             currentIndex: plasmoid.configuration.activeWindowFilter
 
@@ -663,6 +665,12 @@ PlasmaComponents.Page {
                                     break;
                                 case LatteContainment.Types.ActiveFromAllScreens:
                                     plasmoid.configuration.activeWindowFilter = LatteContainment.Types.ActiveFromAllScreens;
+                                    break;
+                                case LatteContainment.Types.MaximizedInCurrentScreen:
+                                    plasmoid.configuration.activeWindowFilter = LatteContainment.Types.MaximizedInCurrentScreen;
+                                    break;
+                                case LatteContainment.Types.MaximizedFromAllScreens:
+                                    plasmoid.configuration.activeWindowFilter = LatteContainment.Types.MaximizedFromAllScreens;
                                     break;
                                 }
                             }
@@ -682,17 +690,17 @@ PlasmaComponents.Page {
 
                         PlasmaComponents.Button {
                             Layout.fillWidth: true
-                            text: i18n("Drag Active Window")
+                            text: i18n("Drag Window")
                             checkable: true
-                            tooltip: i18n("The user can use left mouse button to drag and maximized/restore last active window from empty areas")
+                            tooltip: i18n("The user can use left mouse button to drag and maximized/restore window from empty areas")
                             iconName: "transform-move"
 
-                            readonly property int dragActiveWindowEnabled: plasmoid.configuration.dragActiveWindowEnabled
+                            readonly property int dragWindowEnabled: plasmoid.configuration.dragWindowEnabled
 
-                            onDragActiveWindowEnabledChanged: checked = dragActiveWindowEnabled
+                            onDragWindowEnabledChanged: checked = dragWindowEnabled
 
                             onClicked: {
-                                plasmoid.configuration.dragActiveWindowEnabled = checked;
+                                plasmoid.configuration.dragWindowEnabled = checked;
                             }
                         }
                     }
@@ -707,17 +715,17 @@ PlasmaComponents.Page {
 
                         PlasmaComponents.Button {
                             Layout.fillWidth: true
-                            text: i18n("Close Active Window")
+                            text: i18n("Close Window")
                             checkable: true
-                            tooltip: i18n("The user can use middle mouse button to close last active window from empty areas")
+                            tooltip: i18n("The user can use middle mouse button to close window from empty areas")
                             iconName: "window-close"
 
-                            readonly property int closeActiveWindowEnabled: plasmoid.configuration.closeActiveWindowEnabled
+                            readonly property int closeWindowEnabled: plasmoid.configuration.closeWindowEnabled
 
-                            onCloseActiveWindowEnabledChanged: checked = closeActiveWindowEnabled;
+                            onCloseWindowEnabledChanged: checked = closeWindowEnabled;
 
                             onClicked: {
-                                plasmoid.configuration.closeActiveWindowEnabled = checked;
+                                plasmoid.configuration.closeWindowEnabled = checked;
                             }
                         }
                     }

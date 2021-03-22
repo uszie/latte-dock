@@ -121,6 +121,14 @@ void AllScreensTracker::requestMoveLastWindow(int localX, int localY)
     m_wm->windowsTracker()->lastActiveWindow(m_latteView->layout())->requestMove(m_latteView, localX, localY);
 }
 
+void AllScreensTracker::requestMoveMaximizedWindow(int localX, int localY)
+{
+    if (!m_wm->windowsTracker()->toplevelMaximizedWindow(m_latteView))
+        return;
+
+    m_wm->windowsTracker()->toplevelMaximizedWindow(m_latteView)->requestMove(m_latteView, localX, localY);
+}
+
 }
 }
 }
